@@ -59,12 +59,11 @@ class ViewController: UIViewController {
             let foodStoreLocation = ["부산광역시 부산진구 양정동 418-282",
                                      "부산광역시 부산진구 양정동 393-18",
                                      "부산광역시 부산진구 양정1동 356-22",
-                                     "부산광역시 부산진구 양정동",
                                      "부산광역시 부산진구 양정1동 350-1",
                                      "부산광역시 부산진구 양정1동 중앙대로 902",
                                      "부산광역시 부산진구 양정동 353-38",
                                      "부산광역시 부산진구 양정동 429-19"]
-            let foodStoreNames = ["늘해랑", "번개반점", "아딸", "왕짜장", "토마토 도시락",  "홍콩반점","모르겠어요","동의과학대학교"]
+            let foodStoreNames = ["늘해랑", "번개반점", "아딸", "왕짜장", "토마토 도시락",  "홍콩반점","동의과학대학교"]
             for addr in foodStoreLocation {
                   let geoCoder = CLGeocoder()
                   geoCoder.geocodeAddressString(addr) {
