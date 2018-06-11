@@ -12,6 +12,10 @@ import MapKit
 class ViewController: UIViewController {
       @IBOutlet weak var myMapView: MKMapView!
       
+      //pin 객체 저장
+      var annotations = [MKPointAnnotation]()
+      var count = 0
+      
       override func viewDidLoad() {
             super.viewDidLoad()
             // Do any additional setup after loading the view, typically from a nib.
@@ -50,33 +54,45 @@ class ViewController: UIViewController {
 //            myMapView.addAnnotation(anno03)
             
             ////번개반점의 주소를 위도, 경도로 변환 : geocoding
-            let addr = "부산광역시 부산진구 양정1동 418-260"
-            let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(addr)//, completionHandler: <#T##CLGeocodeCompletionHandler##CLGeocodeCompletionHandler##([CLPlacemark]?, Error?) -> Void#>)
-            {
-                  (placemarks:[CLPlacemark]?, error : Error?) -> Void in
-                  if let error = error {
-                        print(error)
-                        return
+            //let addr = "부산광역시 부산진구 양정1동 418-260"
+            
+            let foodStoreLocation = ["부산광역시 부산진구 양정동 418-282",
+                                     "부산광역시 부산진구 양정동 393-18",
+                                     "부산광역시 부산진구 양정1동 356-22",
+                                     "부산광역시 부산진구 양정동",
+                                     "부산광역시 부산진구 양정1동 350-1",
+                                     "부산광역시 부산진구 양정1동 중앙대로 902",
+                                     "부산광역시 부산진구 양정동 353-38",
+                                     "부산광역시 부산진구 양정동 429-19"]
+            let foodStoreNames = ["늘해랑", "번개반점", "아딸", "왕짜장", "토마토 도시락",  "홍콩반점","모르겠어요","동의과학대학교"]
+            for addr in foodStoreLocation {
+                  let geoCoder = CLGeocoder()
+                  geoCoder.geocodeAddressString(addr) {
+                        (placemarks:[CLPlacemark]?, error : Error?) -> Void in
+                        if let myError = error{
+                              print(myError)
+                              return
+                        }
+                        if let myPlacemarks = placemarks {
+                              let myPlacemarks = myPlacemarks[0]
+                              let loc = myPlacemarks.location?.coordinate
+                              
+                              let anno = MKPointAnnotation()
+                              anno.coordinate = loc!
+                              anno.title = foodStoreNames[self.count]
+                              self.count = self.count + 1
+                              anno.subtitle = addr
+                              //self.myMapView.addAnnotation(anno)
+                              self.annotations.append(anno)
+                              self.myMapView.addAnnotations(self.annotations)
+                              
+                              //여러개의 pin을 지도에 꽉채움
+                              self.myMapView.showAnnotations(self.annotations, animated: true)
+
+                        } else {
+                              print("placemarks nil발생")
+                        }
                   }
-                  
-                  if placemarks != nil {
-                        let placemark = placemarks![0]
-                        print(placemark.location?.coordinate)
-                        
-                        let loc01 = placemark.location?.coordinate
-                        let anno01 = MKPointAnnotation()
-                        anno01.coordinate = loc01!
-                        anno01.title = "번개반점"
-                        anno01.subtitle = addr
-                        self.myMapView.addAnnotation(anno01)
-                  } else {
-                        print("nil 발생")
-                  }
-                  
-      }
-
-
-
+            }
 }
 }
